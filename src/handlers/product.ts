@@ -16,7 +16,7 @@ export const createProduct = async (req: Request, res: Response) => {
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.findAll({
-      order: [["id", "DESC"]],
+      order: [["id", "DESC" as const]],
       attributes: { exclude: ["createdAt", "updatedAt"] },
     });
     res.json({ data: products });
@@ -99,10 +99,7 @@ export const updateAvailabilty = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
   //validando si el producto existe
-     const id = Number(req.params.id);
-    if (Number.isNaN(id)) {
-      return res.status(400).json({ error: 'ID inválido' })
-    }
+  const { id } = req.params;
   const product = await Product.findByPk(+id);
   if (!product) {
     return res.status(404).json({ error: "El Producto a eliminar no existe" });
